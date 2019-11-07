@@ -1,0 +1,40 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{placeins}
+\usepackage{fancyhdr}
+
+\newcommand\enunciat[2][blue]{\textcolor{#1}{\emph{#2}}}
+\newcommand\subject{Tipologia i cicle de vida de les dades}
+\newcommand\activity{PRAC1}
+
+\title{\large \subject \\ \activity}
+\author{Josep Alòs Pascual, Daniel Galan Vilella}
+\date{\today}
+\makeatletter
+
+\pagestyle{fancy}
+\lhead{\subject}
+\rhead{\activity}
+\rfoot{Josep Alòs Pascual, Daniel Galan Vilella}
+
+\begin{document}
+\maketitle
+
+
+\section{Taula de contribucions}
+\begin{table}
+    \begin{tabular}{|l|l|}
+        Contribucions & Signa \\\hline\hline
+        Recerca prèvia & DGV, JAP \\\hline
+        Redacció de les respostes & DGV, JAP \\\hline
+        Desenvolupament del codi & DGV, JAP \\\hline
+    \end{tabular}
+    \caption{Taula de contribucions}
+    \label{table:contribucions}
+\end{table}
+\end{document}
