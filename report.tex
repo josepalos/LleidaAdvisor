@@ -47,6 +47,55 @@ Restaurants Lleida
 de dades que s'ha extret (és necessari que aquesta descripció tingui sentit amb
 el títol triat).}
 
+El dataset estarà separat en dos arxius. En el primer s'inclourà la informació
+referent als restaurants, i el segon sobre els comentaris dels usuaris. S'ha
+decidit separar els dos conjunts per tal de mantenir la consistència dins d'un
+mateix arxiu i evitar tenir dades duplicades.
+
+\paragraph{Dataset 1: restaurants}. Aquest dataset conté informació sobre els
+restaurants. Les dades i el seu tipus es mostren en la
+taula~\ref{table:dataset1_data}.
+
+\begin{table} % TODO review
+    \begin{tabular}{|l|l|l|}
+        Nom       & Tipus  & Descripció \\\hline\hline
+        Nom       & String & Nom del restaurant \\\hline
+        Adreça    & String & Direcció del restaurant \\\hline
+        Telèfon   & String & Telèfon del restaurant \\\hline
+        Puntuació & float  & La puntuació que té el restaurant. Aquesta
+                             puntuació és la mitjana de les puntuacions de
+                             menjar, servei, preu, i atmosfera. El seu valor
+                             va d'1 a 5, i pot ser un nombre decimal. \\\hline
+        Puntuació menjar & float & \\\hline
+        Puntuació servei & float & \\\hline
+        Puntuació preu & float & \\\hline
+        Puntuació atmòsfera & float & \\\hline
+        Horaris setmanals & ?? & Horaris que obra el restaurant. \\\hline
+        Detalls cuina & string & ?? \\\hline
+        Certificat excelència & boolean & Si el restaurant té un certificat
+                                          d'excelència. \\\hline
+    \end{tabular}
+    \caption{Dades de restaurants.}
+    \label{table:dataset1_data}
+\end{table}
+
+\paragraph{Dataset 2: comentaris}. % TODO
+taula~\ref{table:dataset1_data}.
+
+\begin{table} % TODO review
+    \begin{tabular}{|l|l|l|}
+        Nom        & Tipus  & Descripció \\\hline\hline
+        Restaurant & int    & \\\hline
+        Usuari     & string & \\\hline
+        Titol      & string & \\\hline
+        Text       & string & \\\hline
+        Data       & date   & \\\hline
+        Puntuació  & int    & \\\hline
+        Resposta   & string & Resposta del restaurant \\\hline
+    \end{tabular}
+    \caption{Dades dels comentaris.}
+    \label{table:dataset2_data}
+\end{table}
 
 \subsection{Representació gràfica}
 \enunciat{Presentar una imatge o esquema que identifiqui el dataset visualment}
