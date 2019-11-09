@@ -2,7 +2,6 @@
 import typing
 import utils
 import sys
-from lxml import html
 
 BASE_URL = "https://www.tripadvisor.es"
 RESTAURANT_PAGINATION_URL = BASE_URL + "/RestaurantSearch?" \
@@ -25,6 +24,7 @@ class Restaurant:
                  score_food: float,
                  score_service: float,
                  score_price: float,
+                 prices: str,
                  score_ambient: float,
                  opening_hours: str,  # TODO review
                  cuisine_details: str,
@@ -37,6 +37,7 @@ class Restaurant:
         self.score_service = score_service
         self.score_price = score_price
         self.score_ambient = score_ambient
+        self.prices = prices
         self.opening_hours = opening_hours
         self.cuisine_details = cuisine_details
         self.excellency_certificate = excellency_certificate
@@ -73,7 +74,7 @@ def parse_div(restaurant_div):
 def fetch_restaurant_info(name: str, restaurant_url: str) -> Restaurant:
 
     bs = utils.get_bs(BASE_URL + restaurant_url)
-
+    print(restaurant_url)
     direction = utils.get_text_elem(bs, "span", "class", "restaurants-detail-overview-cards-LocationOverviewCard__detailLinkText--co3ei").text
     phone = utils.get_text_elem(bs, "div", "data-blcontact", "PHONE").text
 
@@ -91,18 +92,23 @@ def fetch_restaurant_info(name: str, restaurant_url: str) -> Restaurant:
         score_service = int(utils.get_bubble_score(str(utils.get_text_elem(all_scores[1], "span", "class", "ui_bubble_rating"))))/10
         score_price = int(utils.get_bubble_score(str(utils.get_text_elem(all_scores[2], "span", "class", "ui_bubble_rating"))))/10
 
+    restaurant_details = utils.get_text_all_elems(bs, "div", "class", "restaurants-detail-overview-cards-DetailsSectionOverviewCard__tagText--1OH6h");
+    print(len(restaurant_details))
+
+    # prices = utils.get_text_elem(bs, "div", "class", "restaurants-detail-overview-cards-DetailsSectionOverviewCard__tagText--1OH6h").text
 
     # score_ambient: float,
     # opening_hours = utils.get_text_elem(bs, "div", "class", "public-location-hours-LocationHours__hoursPopover--2h1HP")
-    # cuisine_details: str,
-    # excellency_certificate: bool):
+    # cuisine_details = utils.get_text_elem(bs, "div", "class", "restaurants-detail-overview-cards-DetailsSectionOverviewCard__tagText--1OH6h")
+
+    excellency_certificate = False
+
+    if(utils.get_text_elem(bs, "div", "class", "restaurants-detail-overview-cards-RatingsOverviewCard__award--31yzt")):
+        excellency_certificate = True
 
 
-    print(name + " " + direction + " " + phone + " " + " Score: " + str(score) + " Score food: " + str(score_food) + " Score service: " + str(score_service) + " Score price: " + str(score_price))
-    # print(score_food)
-    # print("---")
-    # print(score_service)
-    # print(score_price)
+
+    print(name + " " + direction + " " + phone + " " + " Score: " + score + " Score food: " + str(score_food) + " Score service: " + str(score_service) + " Score price: " + str(score_price) + " " + str(excellency_certificate))
 
     return None
 
