@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import typing
-
 import utils
 import sys
+from lxml import html
 
 BASE_URL = "https://www.tripadvisor.es"
 RESTAURANT_PAGINATION_URL = BASE_URL + "/RestaurantSearch?" \
@@ -71,7 +71,42 @@ def parse_div(restaurant_div):
 
 
 def fetch_restaurant_info(name: str, restaurant_url: str) -> Restaurant:
-    raise NotImplemented
+
+    bs = utils.get_bs(BASE_URL + restaurant_url)
+
+    direction = utils.get_text_elem(bs, "span", "class", "restaurants-detail-overview-cards-LocationOverviewCard__detailLinkText--co3ei").text
+    phone = utils.get_text_elem(bs, "div", "data-blcontact", "PHONE").text
+
+    # Canviar a float
+    score = utils.get_text_elem(bs, "span", "class", "restaurants-detail-overview-cards-RatingsOverviewCard__overallRating--nohTl").text
+
+    all_scores = utils.get_text_all_elems(bs, "div", "class", "restaurants-detail-overview-cards-RatingsOverviewCard__ratingQuestionRow--5nPGK")
+
+    if(len(all_scores)==0):
+        score_food = None
+        score_service = None
+        score_price = None
+    else:
+        score_food = int(utils.get_bubble_score(str(utils.get_text_elem(all_scores[0], "span", "class", "ui_bubble_rating"))))/10
+        score_service = int(utils.get_bubble_score(str(utils.get_text_elem(all_scores[1], "span", "class", "ui_bubble_rating"))))/10
+        score_price = int(utils.get_bubble_score(str(utils.get_text_elem(all_scores[2], "span", "class", "ui_bubble_rating"))))/10
+
+
+    # score_ambient: float,
+    # opening_hours = utils.get_text_elem(bs, "div", "class", "public-location-hours-LocationHours__hoursPopover--2h1HP")
+    # cuisine_details: str,
+    # excellency_certificate: bool):
+
+
+    print(name + " " + direction + " " + phone + " " + " Score: " + str(score) + " Score food: " + str(score_food) + " Score service: " + str(score_service) + " Score price: " + str(score_price))
+    # print(score_food)
+    # print("---")
+    # print(score_service)
+    # print(score_price)
+
+    return None
+
+
 
 
 if __name__ == "__main__":
