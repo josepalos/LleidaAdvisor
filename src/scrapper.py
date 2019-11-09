@@ -29,7 +29,7 @@ class Restaurant:
                  opening_hours: str,  # TODO review
                  cuisine_details: str,
                  excellency_certificate: bool):
-        self.name = name,
+        self.name = name
         self.direction = direction
         self.phone = phone
         self.score = score
@@ -43,10 +43,15 @@ class Restaurant:
 
     @staticmethod
     def get_csv_headers() -> typing.List:
-        raise NotImplemented
+        return ["name", "direction", "phone", "score", "score_food",
+                "score_service", "score_price", "score_ambient",
+                "opening_hours", "cuisine_details", "excellency_certificate"]
 
     def to_csv_row(self) -> typing.List:
-        raise NotImplemented
+        return [self.name, self.direction, self.phone, self.score,
+                self.score_food, self.score_service, self.score_price,
+                self.score_ambient, self.opening_hours, self.cuisine_details,
+                self.excellency_certificate]
 
 
 def get_restaurants_list(geolocation, offset):
@@ -70,8 +75,8 @@ def fetch_restaurant_info(name: str, restaurant_url: str) -> Restaurant:
 
 
 if __name__ == "__main__":
-    offset = sys.argv[1]
-    restaurants_divs = get_restaurants_list(GEO_LLEIDA, sys.argv[1])
+    restaurant_offset = sys.argv[1]
+    restaurants_divs = get_restaurants_list(GEO_LLEIDA, restaurant_offset)
     restaurants_urls = (parse_div(restaurant)
                         for restaurant in restaurants_divs)
 
