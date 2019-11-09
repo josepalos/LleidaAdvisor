@@ -7,6 +7,8 @@ import requests_cache
 import utils
 import sys
 
+from utils import request_reviews
+
 BASE_URL = "https://www.tripadvisor.es"
 RESTAURANT_PAGINATION_URL = BASE_URL + "/RestaurantSearch?" \
                                        "&geo={geo}" \
@@ -161,46 +163,68 @@ def fetch_restaurant_info(name: str, restaurant_url: str) -> Restaurant:
     return None
 
 
-def fetch_restaurant_reviews_page(restaurant_url: str, page: int
+def fetch_restaurant_reviews_page(restaurant: Restaurant,
+                                  restaurant_url: str,
+                                  page: int
                                   ) -> typing.List[Review]:
-    headers = {
-        "x-requested-with": "XMLHttpRequest",
-        "Content-Type": "application/x-www-form-urlencoded",
-    }
-    data = {
-        "filterLang": "ALL",
-        "filterSafety": "FALSE",
-        "reqNum": 1,
-        "paramSeqId": 6,
-        "changeSet": "REVIEW_LIST",
-    }
-    url = generate_reviews_url(restaurant_url, page)
-    bs = utils.post_bs(url, headers=headers, data=data)
+    """
+    Fetch the reviews for the current specified page
+    :param restaurant: The Restaurant object this reviews will refer
+    :param restaurant_url: The restaurant url
+    :param page: The page to scrap
+    :return: A list with all the reviews found for this restaurant in this page
+    """
+    reviews = list()
+    bs = request_reviews(restaurant_url, page)
 
     reviews_div = bs.find(id="taplc_location_reviews_list_resp_rr_resp_0")
+    reviews_containers = reviews_div.find_all(class_="review-container")
 
-    reviews = reviews_div.find_all(class_="review-container")
-    for review in reviews:
-        member_info = review.find(class_="member_info").find(class_="info_text")
+    for review_element in reviews_containers:
+        member_info = review_element.find(class_="member_info")\
+                                    .find(class_="info_text")
         # There are 2 divs inside member_info, the first is for the user and
         # the second for the user location
-        name = member_info.find("div").text  # Fetch first div
-        print(name)
+        username = member_info.find("div").text  # Fetch first div
+        reviews.append(Review(restaurant=restaurant,
+                              user=username,
+                              title=None,
+                              text=None,
+                              date=None,
+                              score=None,
+                              response=None))
+        print(username)
 
     return []
 
 
 def remove_older(reviews: typing.List[Review], since: datetime.date
                  ) -> typing.List[Review]:
+    """
+    Having a list of reviews, remove the reviews older than the "since" date.
+    :param reviews: The list of the reviews to clean
+    :param since: The date that will be applied as a removing criteria
+    :return: The list without the old reviews
+    """
     return [review for review in reviews if review.date >= since]
 
 
-def fetch_restaurant_reviews(restaurant_url: str, since: datetime.date
+def fetch_restaurant_reviews(restaurant: Restaurant,
+                             restaurant_url: str,
+                             since: datetime.date
                              ) -> typing.List[Review]:
+    """
+    Fetch all the reviews for a restaurant since a specified date.
+    :param restaurant: The restaurant this reviews will refer
+    :param restaurant_url: The url of the restaurant to scrap
+    :param since: The date that sets the limit of the reviews to scrap
+    :return: A list with all the requests found
+    """
     all_reviews = list()
     current_page = 0
     while True:
-        reviews = fetch_restaurant_reviews_page(restaurant_url, current_page)
+        reviews = fetch_restaurant_reviews_page(restaurant, restaurant_url,
+                                                current_page)
         reviews = remove_older(reviews, since)
         if not reviews:
             break
@@ -222,4 +246,5 @@ if __name__ == "__main__":
     first_name, first_url = list(restaurants_urls)[0]
     two_years = datetime.date.today() - datetime.timedelta(days=365)
     print(f"Retrieving reviews since {two_years}")
-    fetch_restaurant_reviews(first_url, since=two_years)
+    restaurant = None
+    fetch_restaurant_reviews(restaurant, first_url, since=two_years)
