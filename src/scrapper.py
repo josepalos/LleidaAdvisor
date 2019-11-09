@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 import datetime
 import typing
+
+import requests_cache
+
 import utils
 import sys
 
@@ -14,6 +17,9 @@ RESTAURANT_PAGE_SIZE = 30
 GEO_LLEIDA = 187500
 RESTAURANT_DIV_CLASS = "restaurants-list-ListCell__cellContainer--2mpJS"
 RESTAURANT_NAME_CLASS = "restaurants-list-ListCell__restaurantName--2aSdo"
+
+
+requests_cache.configure()
 
 
 class Restaurant:
@@ -92,6 +98,20 @@ def generate_page_url(geolocation, offset):
     return RESTAURANT_PAGINATION_URL.format(geo=geolocation, offset=offset)
 
 
+def generate_reviews_url(restaurant_url: str, page: int) -> str:
+    """
+    To change the reviews page, change the "[...]-Reviews-[...]" part of the
+    request to "[...]-Reviews-or<N>-[...]", where N is a multiple of 10 that
+    refers to the offset of the reviews.
+    :param restaurant_url: The relative url to the restaurant
+    :param page: The page number to retrieve
+    :return: The url of the reviews page
+    """
+    offset = page * 10
+    page_url = restaurant_url.replace("-Reviews-", f"-Reviews-or{offset}-")
+    return BASE_URL + page_url
+
+
 def parse_div(restaurant_div):
     name_div = restaurant_div.find(class_=RESTAURANT_NAME_CLASS)
     name = name_div.text
@@ -145,9 +165,6 @@ def fetch_restaurant_reviews(name: str, restaurant_url: str) -> typing.List[Revi
     """
     POST TO https://www.tripadvisor.es/Restaurant_Review-g187500-d995334-Reviews-Xalet_Suis-Lleida_Province_of_Lleida_Catalonia.html
 
-    To change the reviews page, change the "[...]-Reviews-[...]" part of the
-    request to "[...]-Reviews-or<N>-[...]", where N is a multiple of 10 that
-    refers to the offset of the reviews.
 
     with headers:
         x-requested-with: XMLHttpRequest
@@ -170,7 +187,8 @@ def fetch_restaurant_reviews(name: str, restaurant_url: str) -> typing.List[Revi
         "paramSeqId": 6,
         "changeSet": "REVIEW_LIST",
     }
-    bs = utils.post_bs(BASE_URL + restaurant_url, headers=headers, data=data)
+    url = generate_reviews_url(restaurant_url, 0)
+    bs = utils.post_bs(url, headers=headers, data=data)
 
     reviews_div = bs.find(id="taplc_location_reviews_list_resp_rr_resp_0")
 
