@@ -7,6 +7,13 @@ def get_bs(url, *args, **kwargs):
     response.raise_for_status()
     return bs4.BeautifulSoup(response.text, 'html.parser')
 
+
+def post_bs(url, *args, **kwargs):
+    response = requests.post(url, *args, **kwargs)
+    response.raise_for_status()
+    return bs4.BeautifulSoup(response.text, "html.parser")
+
+
 def get_text_elem(elem, tag, a , argument):
     return elem.find(tag, attrs={a:argument})
 

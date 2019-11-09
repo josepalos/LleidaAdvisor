@@ -142,7 +142,45 @@ def fetch_restaurant_info(name: str, restaurant_url: str) -> Restaurant:
 
 
 def fetch_restaurant_reviews(name: str, restaurant_url: str) -> typing.List[Review]:
-    raise NotImplementedError
+    """
+    POST TO https://www.tripadvisor.es/Restaurant_Review-g187500-d995334-Reviews-Xalet_Suis-Lleida_Province_of_Lleida_Catalonia.html
+
+    To change the reviews page, change the "[...]-Reviews-[...]" part of the
+    request to "[...]-Reviews-or<N>-[...]", where N is a multiple of 10 that
+    refers to the offset of the reviews.
+
+    with headers:
+        x-requested-with: XMLHttpRequest
+        Content-Type: application/x-www-form-urlencoded
+    with data
+        filterLang=ALL&
+        filterSafety=FALSE&
+        reqNum=1&
+        paramSeqId=6&
+        changeSet=REVIEW_LIST&
+    """
+    headers = {
+        "x-requested-with": "XMLHttpRequest",
+        "Content-Type": "application/x-www-form-urlencoded",
+    }
+    data = {
+        "filterLang": "ALL",
+        "filterSafety": "FALSE",
+        "reqNum": 1,
+        "paramSeqId": 6,
+        "changeSet": "REVIEW_LIST",
+    }
+    bs = utils.post_bs(BASE_URL + restaurant_url, headers=headers, data=data)
+
+    reviews_div = bs.find(id="taplc_location_reviews_list_resp_rr_resp_0")
+
+    reviews = reviews_div.find_all(class_="review-container")
+    for review in reviews:
+        member_info = review.find(class_="member_info").find(class_="info_text")
+        # There are 2 divs inside member_info, the first is for the user and
+        # the second for the user location
+        name = member_info.find("div").text  # Fetch first div
+        print(name)
 
 
 if __name__ == "__main__":
@@ -151,5 +189,8 @@ if __name__ == "__main__":
     restaurants_urls = (parse_div(restaurant)
                         for restaurant in restaurants_divs)
 
-    restaurants = [fetch_restaurant_info(name, restaurant)
-                   for name, restaurant in restaurants_urls]
+    # restaurants = [fetch_restaurant_info(name, restaurant)
+    #                for name, restaurant in restaurants_urls]
+
+    first = list(restaurants_urls)[0]
+    fetch_restaurant_reviews(*first)
