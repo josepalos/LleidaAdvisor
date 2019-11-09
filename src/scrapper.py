@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import datetime
 import typing
 import utils
 import sys
@@ -53,6 +54,33 @@ class Restaurant:
                 self.score_food, self.score_service, self.score_price,
                 self.score_ambient, self.opening_hours, self.cuisine_details,
                 self.excellency_certificate]
+
+
+class Review:
+    def __init__(self,
+                 restaurant_id: int,
+                 user: str,
+                 title: str,
+                 text: str,
+                 date: datetime.datetime,
+                 score: int,
+                 response: typing.Optional[str]):
+        self.restaurant_id = restaurant_id,
+        self.user = user
+        self.title = title
+        self.text = text
+        self.date = date
+        self.score = score
+        self.response = response
+
+    @staticmethod
+    def get_csv_headers() -> typing.List:
+        return ["restaurant_id", "user", "title", "text", "date", "score",
+                "response"]
+
+    def to_csv_row(self) -> typing.List:
+        return [self.restaurant_id, self.user, self.title, self.text,
+                self.date, self.score, self.response]
 
 
 def get_restaurants_list(geolocation, offset):
@@ -113,6 +141,8 @@ def fetch_restaurant_info(name: str, restaurant_url: str) -> Restaurant:
     return None
 
 
+def fetch_restaurant_reviews(name: str, restaurant_url: str) -> typing.List[Review]:
+    raise NotImplementedError
 
 
 if __name__ == "__main__":
