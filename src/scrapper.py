@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 import datetime
+import functools
 import typing
 
 import requests_cache
+from bs4 import Tag
 
 import utils
 import sys
 
-from utils import request_reviews
-
-BASE_URL = "https://www.tripadvisor.es"
+BASE_URL = "https://www.tripadvisor.com"
 RESTAURANT_PAGINATION_URL = BASE_URL + "/RestaurantSearch?" \
                                        "&geo={geo}" \
                                        "&sortOrder=relevance" \
@@ -70,25 +70,29 @@ class Review:
                  user: str,
                  title: str,
                  text: str,
-                 date: datetime.date,
+                 visit_date: datetime.date,
                  score: int,
                  response: typing.Optional[str]):
         self.restaurant = restaurant
         self.user = user
         self.title = title
         self.text = text
-        self.date = date
+        self.visit_date = visit_date
         self.score = score
         self.response = response
 
+    @property
+    def visit_date_text(self):
+        return self.visit_date.strftime("%Y-%m")
+
     @staticmethod
     def get_csv_headers() -> typing.List:
-        return ["restaurant_id", "user", "title", "text", "date", "score",
+        return ["restaurant_id", "user", "title", "text", "visit_date", "score",
                 "response"]
 
     def to_csv_row(self) -> typing.List:
         return [self.restaurant.name, self.user, self.title, self.text,
-                self.date, self.score, self.response]
+                self.visit_date_text, self.score, self.response]
 
 
 def get_restaurants_list(geolocation, offset):
@@ -174,28 +178,33 @@ def fetch_restaurant_reviews_page(restaurant: Restaurant,
     :param page: The page to scrap
     :return: A list with all the reviews found for this restaurant in this page
     """
-    reviews = list()
-    bs = request_reviews(restaurant_url, page)
+    bs = utils.request_reviews(restaurant_url, page)
 
     reviews_div = bs.find(id="taplc_location_reviews_list_resp_rr_resp_0")
     reviews_containers = reviews_div.find_all(class_="review-container")
 
-    for review_element in reviews_containers:
-        member_info = review_element.find(class_="member_info")\
-                                    .find(class_="info_text")
-        # There are 2 divs inside member_info, the first is for the user and
-        # the second for the user location
-        username = member_info.find("div").text  # Fetch first div
-        reviews.append(Review(restaurant=restaurant,
-                              user=username,
-                              title=None,
-                              text=None,
-                              date=None,
-                              score=None,
-                              response=None))
-        print(username)
+    wrapper = functools.partial(parse_review_element, restaurant)
+    return [wrapper(element) for element in reviews_containers]
 
-    return []
+
+def parse_review_element(restaurant: Restaurant, review_element: Tag) -> Review:
+    member_info = review_element.find(class_="member_info") \
+        .find(class_="info_text")
+    # There are 2 divs inside info_text, the first is for the user and
+    # the second for the user location
+    username = member_info.find("div").text  # Fetch first div
+
+    visit_date_span = review_element.find(class_="prw_rup prw_reviews_stay_date_hsx")
+    visit_date_text = visit_date_span.contents[1].strip()
+    d = datetime.datetime.strptime(visit_date_text, '%B %Y').date()
+
+    return Review(restaurant=restaurant,
+                  user=username,
+                  title=None,
+                  text=None,
+                  visit_date=d,
+                  score=None,
+                  response=None)
 
 
 def remove_older(reviews: typing.List[Review], since: datetime.date
@@ -206,7 +215,7 @@ def remove_older(reviews: typing.List[Review], since: datetime.date
     :param since: The date that will be applied as a removing criteria
     :return: The list without the old reviews
     """
-    return [review for review in reviews if review.date >= since]
+    return [review for review in reviews if review.visit_date >= since]
 
 
 def fetch_restaurant_reviews(restaurant: Restaurant,
@@ -247,4 +256,6 @@ if __name__ == "__main__":
     two_years = datetime.date.today() - datetime.timedelta(days=365)
     print(f"Retrieving reviews since {two_years}")
     restaurant = None
-    fetch_restaurant_reviews(restaurant, first_url, since=two_years)
+    reviews = fetch_restaurant_reviews(restaurant, first_url, since=two_years)
+    for review in reviews:
+        print(f"On {review.visit_date_text} the user {review.user} commented")
