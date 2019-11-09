@@ -64,14 +64,14 @@ class Restaurant:
 
 class Review:
     def __init__(self,
-                 restaurant_id: int,
+                 restaurant: Restaurant,
                  user: str,
                  title: str,
                  text: str,
-                 date: datetime.datetime,
+                 date: datetime.date,
                  score: int,
                  response: typing.Optional[str]):
-        self.restaurant_id = restaurant_id,
+        self.restaurant = restaurant
         self.user = user
         self.title = title
         self.text = text
@@ -85,7 +85,7 @@ class Review:
                 "response"]
 
     def to_csv_row(self) -> typing.List:
-        return [self.restaurant_id, self.user, self.title, self.text,
+        return [self.restaurant.name, self.user, self.title, self.text,
                 self.date, self.score, self.response]
 
 
