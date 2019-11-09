@@ -161,21 +161,8 @@ def fetch_restaurant_info(name: str, restaurant_url: str) -> Restaurant:
     return None
 
 
-def fetch_restaurant_reviews(name: str, restaurant_url: str) -> typing.List[Review]:
-    """
-    POST TO https://www.tripadvisor.es/Restaurant_Review-g187500-d995334-Reviews-Xalet_Suis-Lleida_Province_of_Lleida_Catalonia.html
-
-
-    with headers:
-        x-requested-with: XMLHttpRequest
-        Content-Type: application/x-www-form-urlencoded
-    with data
-        filterLang=ALL&
-        filterSafety=FALSE&
-        reqNum=1&
-        paramSeqId=6&
-        changeSet=REVIEW_LIST&
-    """
+def fetch_restaurant_reviews_page(restaurant_url: str, page: int
+                                  ) -> typing.List[Review]:
     headers = {
         "x-requested-with": "XMLHttpRequest",
         "Content-Type": "application/x-www-form-urlencoded",
@@ -187,7 +174,7 @@ def fetch_restaurant_reviews(name: str, restaurant_url: str) -> typing.List[Revi
         "paramSeqId": 6,
         "changeSet": "REVIEW_LIST",
     }
-    url = generate_reviews_url(restaurant_url, 0)
+    url = generate_reviews_url(restaurant_url, page)
     bs = utils.post_bs(url, headers=headers, data=data)
 
     reviews_div = bs.find(id="taplc_location_reviews_list_resp_rr_resp_0")
@@ -200,6 +187,28 @@ def fetch_restaurant_reviews(name: str, restaurant_url: str) -> typing.List[Revi
         name = member_info.find("div").text  # Fetch first div
         print(name)
 
+    return []
+
+
+def remove_older(reviews: typing.List[Review], since: datetime.date
+                 ) -> typing.List[Review]:
+    return [review for review in reviews if review.date >= since]
+
+
+def fetch_restaurant_reviews(restaurant_url: str, since: datetime.date
+                             ) -> typing.List[Review]:
+    all_reviews = list()
+    current_page = 0
+    while True:
+        reviews = fetch_restaurant_reviews_page(restaurant_url, current_page)
+        reviews = remove_older(reviews, since)
+        if not reviews:
+            break
+        all_reviews.extend(reviews)
+        current_page += 1
+
+    return all_reviews
+
 
 if __name__ == "__main__":
     restaurant_offset = sys.argv[1]
@@ -210,5 +219,7 @@ if __name__ == "__main__":
     # restaurants = [fetch_restaurant_info(name, restaurant)
     #                for name, restaurant in restaurants_urls]
 
-    first = list(restaurants_urls)[0]
-    fetch_restaurant_reviews(*first)
+    first_name, first_url = list(restaurants_urls)[0]
+    two_years = datetime.date.today() - datetime.timedelta(days=365)
+    print(f"Retrieving reviews since {two_years}")
+    fetch_restaurant_reviews(first_url, since=two_years)
