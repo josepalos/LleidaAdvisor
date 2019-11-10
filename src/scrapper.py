@@ -4,7 +4,7 @@ import functools
 import typing
 
 import requests_cache
-from bs4 import Tag
+from bs4 import Tag, BeautifulSoup
 
 import utils
 import sys
@@ -182,17 +182,44 @@ def fetch_restaurant_reviews_page(restaurant: Restaurant,
 
     reviews_div = bs.find(id="taplc_location_reviews_list_resp_rr_resp_0")
     reviews_containers = reviews_div.find_all(class_="review-container")
+    reviews_pages = (get_review_page(review_container)
+                     for review_container in reviews_containers)
 
-    wrapper = functools.partial(parse_review_element, restaurant)
-    return [wrapper(element) for element in reviews_containers]
+    wrapper = functools.partial(parse_review_page, restaurant)
+    return [wrapper(page) for page in reviews_pages]
 
 
-def parse_review_element(restaurant: Restaurant, review_element: Tag) -> Review:
+def get_review_page(review_container: Tag) -> BeautifulSoup:
+    review_url = review_container.find("a", class_="title").attrs["href"]
+    return utils.get_bs(review_url)
+
+
+def parse_review_page(restaurant: Restaurant, page: BeautifulSoup) -> Review:
+    raise NotImplementedError
+
+
+
     member_info = review_element.find(class_="member_info") \
         .find(class_="info_text")
     # There are 2 divs inside info_text, the first is for the user and
     # the second for the user location
     username = member_info.find("div").text  # Fetch first div
+
+    title = review_element.find(class_="title").text
+
+    """
+    text -> in a div with class partial_entry.
+    It has a link to extend the review, it executes a POST to:
+        https://www.tripadvisor.es/OverlayWidgetAjax?
+                                    Mode=EXPANDED_HOTEL_REVIEWS_RESP&
+                                    metaReferer=&
+                                    contextChoice=DETAIL&
+                                    reviews=720215893%2C711999787
+                                    
+    the review id can be found at the review_element in the attribute data-reviewid
+    """
+    review_id = review_element.attrs['data-reviewid']
+    print(f"Parsing review {review_id}")
 
     visit_date_span = review_element.find(class_="prw_rup prw_reviews_stay_date_hsx")
     visit_date_text = visit_date_span.contents[1].strip()
@@ -200,7 +227,7 @@ def parse_review_element(restaurant: Restaurant, review_element: Tag) -> Review:
 
     return Review(restaurant=restaurant,
                   user=username,
-                  title=None,
+                  title=title,
                   text=None,
                   visit_date=d,
                   score=None,
