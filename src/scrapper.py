@@ -81,6 +81,11 @@ class Review:
         self.score = score
         self.response = response
 
+    def __repr__(self):
+        return f"Restaurant {self.restaurant.name} review by {self.user} at " \
+               f"{self.visit_date_text} with score {self.score}: " \
+               f"{self.title} -> {self.text}"
+
     @property
     def visit_date_text(self):
         return self.visit_date.strftime("%Y-%m")
@@ -182,6 +187,9 @@ def fetch_restaurant_reviews_page(restaurant: Restaurant,
 
     reviews_div = bs.find(id="taplc_location_reviews_list_resp_rr_resp_0")
     reviews_containers = reviews_div.find_all(class_="review-container")
+
+    # Fetch the entire page instead of parsing the container to avoid problems
+    # such as large reviews partially shown.
     reviews_pages = (get_review_page(review_container)
                      for review_container in reviews_containers)
 
@@ -191,46 +199,43 @@ def fetch_restaurant_reviews_page(restaurant: Restaurant,
 
 def get_review_page(review_container: Tag) -> BeautifulSoup:
     review_url = review_container.find("a", class_="title").attrs["href"]
-    return utils.get_bs(review_url)
+    return utils.get_bs(BASE_URL + review_url)
+
+
+def get_rating(tag: Tag) -> int:
+    classes = tag.find(class_="ui_bubble_rating")['class']
+    for class_ in classes:
+        if class_.startswith("bubble_"):
+            score = class_.replace("bubble_", "")
+            return int(int(score) / 10)
 
 
 def parse_review_page(restaurant: Restaurant, page: BeautifulSoup) -> Review:
+    heading = page.find(id="HEADING")
+    title = heading.find(id="PAGEHEADING").text.strip()
+    score = get_rating(heading.find(class_="rating"))
+
+    review_container = page.find(class_="review-container")
+
+    username = review_container.find(class_="member_info")\
+        .find(class_="username").text
+
+    print(review_container.find(class_="review").prettify())
+
     raise NotImplementedError
+    text = review_container.find("p", class_="partial_entry").text
 
 
-
-    member_info = review_element.find(class_="member_info") \
-        .find(class_="info_text")
-    # There are 2 divs inside info_text, the first is for the user and
-    # the second for the user location
-    username = member_info.find("div").text  # Fetch first div
-
-    title = review_element.find(class_="title").text
-
-    """
-    text -> in a div with class partial_entry.
-    It has a link to extend the review, it executes a POST to:
-        https://www.tripadvisor.es/OverlayWidgetAjax?
-                                    Mode=EXPANDED_HOTEL_REVIEWS_RESP&
-                                    metaReferer=&
-                                    contextChoice=DETAIL&
-                                    reviews=720215893%2C711999787
-                                    
-    the review id can be found at the review_element in the attribute data-reviewid
-    """
-    review_id = review_element.attrs['data-reviewid']
-    print(f"Parsing review {review_id}")
-
-    visit_date_span = review_element.find(class_="prw_rup prw_reviews_stay_date_hsx")
+    visit_date_span = review_container.find(class_="prw_rup prw_reviews_stay_date_hsx")
     visit_date_text = visit_date_span.contents[1].strip()
-    d = datetime.datetime.strptime(visit_date_text, '%B %Y').date()
+    date = datetime.datetime.strptime(visit_date_text, '%B %Y').date()
 
     return Review(restaurant=restaurant,
                   user=username,
                   title=title,
-                  text=None,
-                  visit_date=d,
-                  score=None,
+                  text=text,
+                  visit_date=date,
+                  score=score,
                   response=None)
 
 
@@ -284,5 +289,8 @@ if __name__ == "__main__":
     print(f"Retrieving reviews since {two_years}")
     restaurant = None
     reviews = fetch_restaurant_reviews(restaurant, first_url, since=two_years)
+
+    print("Reviews found:")
     for review in reviews:
-        print(f"On {review.visit_date_text} the user {review.user} commented")
+        print(review)
+        print("")
