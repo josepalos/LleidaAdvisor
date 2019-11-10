@@ -14,6 +14,9 @@ RESTAURANT_PAGINATION_URL = BASE_URL + "/RestaurantSearch?" \
                                        "&geo={geo}" \
                                        "&sortOrder=relevance" \
                                        "&o=a{offset}"
+REVIEW_URL = BASE_URL + "/OverlayWidgetAjax?" \
+                        "Mode=EXPANDED_HOTEL_REVIEWS&" \
+                        "metaReferer=ShowUserReviewsRestaurants"
 RESTAURANT_PAGE_SIZE = 30
 
 GEO_LLEIDA = 187500
@@ -82,7 +85,7 @@ class Review:
         self.response = response
 
     def __repr__(self):
-        return f"Restaurant {self.restaurant.name} review by {self.user} at " \
+        return f"Review by {self.user} at " \
                f"{self.visit_date_text} with score {self.score}: " \
                f"{self.title} -> {self.text}"
 
@@ -198,35 +201,26 @@ def fetch_restaurant_reviews_page(restaurant: Restaurant,
 
 
 def get_review_page(review_container: Tag) -> BeautifulSoup:
-    review_url = review_container.find("a", class_="title").attrs["href"]
-    return utils.get_bs(BASE_URL + review_url)
-
-
-def get_rating(tag: Tag) -> int:
-    classes = tag.find(class_="ui_bubble_rating")['class']
-    for class_ in classes:
-        if class_.startswith("bubble_"):
-            score = class_.replace("bubble_", "")
-            return int(int(score) / 10)
+    review_id = review_container.attrs["data-reviewid"]
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-Requested-With": "XMLHttpRequest",
+    }
+    data = {
+        "reviews": review_id
+    }
+    return utils.post_bs(REVIEW_URL, headers=headers, data=data)
 
 
 def parse_review_page(restaurant: Restaurant, page: BeautifulSoup) -> Review:
-    heading = page.find(id="HEADING")
-    title = heading.find(id="PAGEHEADING").text.strip()
-    score = get_rating(heading.find(class_="rating"))
+    title = page.find("div", class_="quote").text.strip()
+    score = utils.get_rating(page)
 
-    review_container = page.find(class_="review-container")
+    username = page.find(class_="member_info").find(class_="username").text
 
-    username = review_container.find(class_="member_info")\
-        .find(class_="username").text
+    text = page.find("p", class_="partial_entry").text
 
-    print(review_container.find(class_="review").prettify())
-
-    raise NotImplementedError
-    text = review_container.find("p", class_="partial_entry").text
-
-
-    visit_date_span = review_container.find(class_="prw_rup prw_reviews_stay_date_hsx")
+    visit_date_span = page.find(class_="prw_rup prw_reviews_stay_date_hsx")
     visit_date_text = visit_date_span.contents[1].strip()
     date = datetime.datetime.strptime(visit_date_text, '%B %Y').date()
 
@@ -284,11 +278,11 @@ if __name__ == "__main__":
     # restaurants = [fetch_restaurant_info(name, restaurant)
     #                for name, restaurant in restaurants_urls]
 
-    first_name, first_url = list(restaurants_urls)[0]
     two_years = datetime.date.today() - datetime.timedelta(days=365)
     print(f"Retrieving reviews since {two_years}")
     restaurant = None
-    reviews = fetch_restaurant_reviews(restaurant, first_url, since=two_years)
+    restaurant_url = "/Restaurant_Review-g187500-d995334-Reviews-Xalet_Suis-Lleida_Province_of_Lleida_Catalonia.html"
+    reviews = fetch_restaurant_reviews(restaurant, restaurant_url, since=two_years)
 
     print("Reviews found:")
     for review in reviews:
