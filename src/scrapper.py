@@ -285,7 +285,7 @@ if __name__ == "__main__":
     # restaurants = [fetch_restaurant_info(name, restaurant)
     #                for name, restaurant in restaurants_urls]
 
-    two_years = datetime.date.today() - datetime.timedelta(days=365)
+    two_years = datetime.date.today() - datetime.timedelta(days=365*2)
     print(f"Retrieving reviews since {two_years}")
     restaurant = None
     xalet = "/Restaurant_Review-g187500-d995334-Reviews-Xalet_Suis-Lleida_Province_of_Lleida_Catalonia.html"
