@@ -86,8 +86,7 @@ class Review:
 
     def __repr__(self):
         return f"Review by {self.user} at " \
-               f"{self.visit_date_text} with score {self.score}: " \
-               f"{self.title} -> {self.text}"
+               f"{self.visit_date_text} with score {self.score}"
 
     @property
     def visit_date_text(self):
@@ -218,11 +217,18 @@ def parse_review_page(restaurant: Restaurant, page: BeautifulSoup) -> Review:
 
     username = page.find(class_="member_info").find(class_="username").text
 
-    text = page.find("p", class_="partial_entry").text
+    text = utils.get_text_with_breaks(page.find("p", class_="partial_entry"))
 
     visit_date_span = page.find(class_="prw_rup prw_reviews_stay_date_hsx")
     visit_date_text = visit_date_span.contents[1].strip()
     date = datetime.datetime.strptime(visit_date_text, '%B %Y').date()
+
+    response_div = page.find(class_="mgrRspnInline")
+    if response_div:
+        response_element = response_div.find(class_="partial_entry")
+        response = utils.get_text_with_breaks(response_element)
+    else:
+        response = None
 
     return Review(restaurant=restaurant,
                   user=username,
@@ -230,7 +236,8 @@ def parse_review_page(restaurant: Restaurant, page: BeautifulSoup) -> Review:
                   text=text,
                   visit_date=date,
                   score=score,
-                  response=None)
+                  response=response)
+
 
 
 def remove_older(reviews: typing.List[Review], since: datetime.date
@@ -281,10 +288,13 @@ if __name__ == "__main__":
     two_years = datetime.date.today() - datetime.timedelta(days=365)
     print(f"Retrieving reviews since {two_years}")
     restaurant = None
-    restaurant_url = "/Restaurant_Review-g187500-d995334-Reviews-Xalet_Suis-Lleida_Province_of_Lleida_Catalonia.html"
-    reviews = fetch_restaurant_reviews(restaurant, restaurant_url, since=two_years)
+    xalet = "/Restaurant_Review-g187500-d995334-Reviews-Xalet_Suis-Lleida_Province_of_Lleida_Catalonia.html"
+    tiki = "/Restaurant_Review-g187437-d1163551-Reviews-TikiTano_Beach_Restaurant_Lounge-Estepona_Costa_del_Sol_Province_of_Malaga_Andalu.html"
+    reviews = fetch_restaurant_reviews(restaurant, tiki, since=two_years)
 
     print("Reviews found:")
     for review in reviews:
         print(review)
+        print(review.text)
+        print(review.response)
         print("")

@@ -1,6 +1,6 @@
 import requests
 import bs4
-from bs4 import Tag
+from bs4 import Tag, NavigableString
 
 from scrapper import generate_reviews_url
 
@@ -50,3 +50,13 @@ def get_rating(tag: Tag) -> int:
         if class_.startswith("bubble_"):
             score = class_.replace("bubble_", "")
             return int(int(score) / 10)
+
+
+def get_text_with_breaks(element: Tag) -> str:
+    string = ""
+    for content in element.contents:
+        if isinstance(content, NavigableString):
+            string += content
+        else:
+            string += "\n"
+    return string
