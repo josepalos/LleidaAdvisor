@@ -2,10 +2,8 @@
 import datetime
 import functools
 import typing
-
 import requests_cache
 from bs4 import Tag, BeautifulSoup
-
 import utils
 import sys
 
@@ -22,7 +20,13 @@ RESTAURANT_PAGE_SIZE = 30
 GEO_LLEIDA = 187500
 RESTAURANT_DIV_CLASS = "restaurants-list-ListCell__cellContainer--2mpJS"
 RESTAURANT_NAME_CLASS = "restaurants-list-ListCell__restaurantName--2aSdo"
-
+RESTAURANT_DETAILS_NAME_CLASS_TOP = "restaurants-detail-overview-cards-DetailsSectionOverviewCard__categoryTitle--2RJP_"
+RESTAURANT_DETAILS_CONTENT_CLASS_TOP = "restaurants-detail-overview-cards-DetailsSectionOverviewCard__tagText--1OH6h"
+RESTAURANT_DETAILS_NAME_CLASS_BOTTOM = "restaurants-details-card-TagCategories__categoryTitle--28rB6"
+RESTAURANT_DETAILS_CONTENT_CLASS_BOTTOM = "restaurants-details-card-TagCategories__tagText--Yt3iG"
+RESTAURANT_DIRECTION_SPAN = "restaurants-detail-overview-cards-LocationOverviewCard__detailLinkText--co3ei"
+RESTAURANT_SCORE_SPAN = "restaurants-detail-overview-cards-RatingsOverviewCard__overallRating--nohTl"
+RESTAURANT_SCORES_DIV = "restaurants-detail-overview-cards-RatingsOverviewCard__ratingQuestionRow--5nPGK"
 
 requests_cache.configure()
 
@@ -38,7 +42,6 @@ class Restaurant:
                  score_price: float,
                  prices: str,
                  score_ambient: float,
-                 opening_hours: str,  # TODO review
                  cuisine_details: str,
                  excellency_certificate: bool):
         self.name = name
@@ -50,7 +53,6 @@ class Restaurant:
         self.score_price = score_price
         self.score_ambient = score_ambient
         self.prices = prices
-        self.opening_hours = opening_hours
         self.cuisine_details = cuisine_details
         self.excellency_certificate = excellency_certificate
 
@@ -58,12 +60,12 @@ class Restaurant:
     def get_csv_headers() -> typing.List:
         return ["name", "direction", "phone", "score", "score_food",
                 "score_service", "score_price", "score_ambient",
-                "opening_hours", "cuisine_details", "excellency_certificate"]
+                "prices", "cuisine_details", "excellency_certificate"]
 
     def to_csv_row(self) -> typing.List:
         return [self.name, self.direction, self.phone, self.score,
                 self.score_food, self.score_service, self.score_price,
-                self.score_ambient, self.opening_hours, self.cuisine_details,
+                self.score_ambient, self.prices, self.cuisine_details,
                 self.excellency_certificate]
 
 
@@ -94,8 +96,8 @@ class Review:
 
     @staticmethod
     def get_csv_headers() -> typing.List:
-        return ["restaurant_id", "user", "title", "text", "visit_date", "score",
-                "response"]
+        return ["restaurant_id", "user", "title", "text", "visit_date",
+                "score", "response"]
 
     def to_csv_row(self) -> typing.List:
         return [self.restaurant.name, self.user, self.title, self.text,
@@ -133,45 +135,136 @@ def parse_div(restaurant_div):
 
 
 def fetch_restaurant_info(name: str, restaurant_url: str) -> Restaurant:
-
     bs = utils.get_bs(BASE_URL + restaurant_url)
-    print(restaurant_url)
-    direction = utils.get_text_elem(bs, "span", "class", "restaurants-detail-overview-cards-LocationOverviewCard__detailLinkText--co3ei").text
+
+    # Get address and phone
+    direction = utils.get_text_elem(bs, "span", "class", RESTAURANT_DIRECTION_SPAN).text
     phone = utils.get_text_elem(bs, "div", "data-blcontact", "PHONE").text
 
-    # Canviar a float
-    score = utils.get_text_elem(bs, "span", "class", "restaurants-detail-overview-cards-RatingsOverviewCard__overallRating--nohTl").text
-
-    all_scores = utils.get_text_all_elems(bs, "div", "class", "restaurants-detail-overview-cards-RatingsOverviewCard__ratingQuestionRow--5nPGK")
-
-    if(len(all_scores)==0):
-        score_food = None
-        score_service = None
-        score_price = None
-    else:
-        score_food = int(utils.get_bubble_score(str(utils.get_text_elem(all_scores[0], "span", "class", "ui_bubble_rating"))))/10
-        score_service = int(utils.get_bubble_score(str(utils.get_text_elem(all_scores[1], "span", "class", "ui_bubble_rating"))))/10
-        score_price = int(utils.get_bubble_score(str(utils.get_text_elem(all_scores[2], "span", "class", "ui_bubble_rating"))))/10
-
-    restaurant_details = utils.get_text_all_elems(bs, "div", "class", "restaurants-detail-overview-cards-DetailsSectionOverviewCard__tagText--1OH6h");
-    print(len(restaurant_details))
-
-    # prices = utils.get_text_elem(bs, "div", "class", "restaurants-detail-overview-cards-DetailsSectionOverviewCard__tagText--1OH6h").text
-
-    # score_ambient: float,
-    # opening_hours = utils.get_text_elem(bs, "div", "class", "public-location-hours-LocationHours__hoursPopover--2h1HP")
-    # cuisine_details = utils.get_text_elem(bs, "div", "class", "restaurants-detail-overview-cards-DetailsSectionOverviewCard__tagText--1OH6h")
+    score_food = None
+    score_service = None
+    score_price = None
+    score_ambient = None
+    prices = None
+    cuisine_details = None
 
     excellency_certificate = False
 
-    if(utils.get_text_elem(bs, "div", "class", "restaurants-detail-overview-cards-RatingsOverviewCard__award--31yzt")):
+    # Get score
+    score = float(utils.get_text_elem(bs, "span", "class", RESTAURANT_SCORE_SPAN).text.replace(',', '.'))
+
+    all_scores = utils.get_text_all_elems(bs, "div", "class", RESTAURANT_SCORES_DIV)
+    all_scores_len = len(all_scores)
+
+    # Get all scores
+
+    if all_scores_len != 0:
+        score_food = int(
+            utils.get_bubble_score(str(utils.get_text_elem(all_scores[0], "span", "class", "ui_bubble_rating")))) / 10
+        score_service = int(
+            utils.get_bubble_score(str(utils.get_text_elem(all_scores[1], "span", "class", "ui_bubble_rating")))) / 10
+        score_price = int(
+            utils.get_bubble_score(str(utils.get_text_elem(all_scores[2], "span", "class", "ui_bubble_rating")))) / 10
+
+        if all_scores_len == 4:
+            score_ambient = int(utils.get_bubble_score(
+                str(utils.get_text_elem(all_scores[3], "span", "class", "ui_bubble_rating")))) / 10
+        else:
+            score_ambient = None
+
+    # Get restaurant details and prices
+
+    restaurant_details_top = utils.get_text_elem(bs, "div", "class",
+                                                 "restaurants-detail-overview-cards-DetailsSectionOverviewCard__detailsSummary--evhlS")
+    restaurant_details_bottom = utils.get_text_elem(bs, "div", "data-tab", "TABS_DETAILS")
+
+    if not restaurant_details_top and restaurant_details_bottom:
+
+        cols = utils.get_text_all_elems(restaurant_details_bottom, "div", "class", "ui_column")
+        # list_cols = []
+        dict = {}
+        cuisine_details = ""
+
+        for col in cols:
+            dict.update(parse_restaurant_details(col, "BOTTOM"))
+
+        # col1 = list_cols[0]
+        # col2 = list_cols[1]
+        # col3 = list_cols[2]
+
+        # dict = {**col1, **col2, **col3}
+
+        prices = dict.get("PRICE RANGE", None)
+
+        if "CUISINES" in dict:
+            cuisine_details += dict["CUISINES"] + ", "
+
+        if "Special Diets" in dict:
+            cuisine_details += dict["Special Diets"]
+
+
+    elif not restaurant_details_bottom and restaurant_details_top:
+
+        details = parse_restaurant_details(restaurant_details_top, "TOP")
+        cuisine_details = ""
+
+        prices = details.get("PRICE RANGE", None)
+
+        if "CUISINES" in details:
+            cuisine_details += details["CUISINES"] + ", "
+
+        if "Special Diets" in details:
+            cuisine_details += details["Special Diets"]
+
+    # Get excellency certificate
+
+    if utils.get_text_elem(bs, "div", "class", "restaurants-detail-overview-cards-RatingsOverviewCard__award--31yzt"):
         excellency_certificate = True
 
+    print(
+        "- Name:", name,
+        "- Direction:", direction,
+        "- Phone:", phone,
+        "- Score:", score,
+        "- Score ambient:", score_food,
+        "- Score service:", score_service,
+        "- Score price:", score_price,
+        "- Prices:", prices,
+        "- Score ambient:", score_ambient,
+        "- Cuisine details:", cuisine_details,
+        "- Excelency:", excellency_certificate
+    )
+
+    return Restaurant(
+        name,
+        direction,
+        phone,
+        score,
+        score_food,
+        score_service,
+        score_price,
+        prices,
+        score_ambient,
+        cuisine_details,
+        excellency_certificate
+    )
 
 
-    print(name + " " + direction + " " + phone + " " + " Score: " + score + " Score food: " + str(score_food) + " Score service: " + str(score_service) + " Score price: " + str(score_price) + " " + str(excellency_certificate))
+def parse_restaurant_details(categories_element: Tag, pos) -> dict:
+    categories = dict()
+    name = ""
+    content = ""
+    categories_divs = categories_element.children
+    for category in categories_divs:
 
-    return None
+        if pos == "TOP":
+            name = category.find(class_=RESTAURANT_DETAILS_NAME_CLASS_TOP).text
+            content = category.find(class_=RESTAURANT_DETAILS_CONTENT_CLASS_TOP).text
+        elif pos == "BOTTOM":
+            name = category.find(class_=RESTAURANT_DETAILS_NAME_CLASS_BOTTOM).text
+            content = category.find(class_=RESTAURANT_DETAILS_CONTENT_CLASS_BOTTOM).text
+        categories[name] = content
+    return categories
 
 
 def fetch_restaurant_reviews_page(restaurant: Restaurant,
@@ -201,6 +294,7 @@ def fetch_restaurant_reviews_page(restaurant: Restaurant,
 
 def get_review_page(review_container: Tag) -> BeautifulSoup:
     review_id = review_container.attrs["data-reviewid"]
+    print(f"Parsing review {review_id}")
     headers = {
         "Content-Type": "application/x-www-form-urlencoded",
         "X-Requested-With": "XMLHttpRequest",
@@ -237,7 +331,6 @@ def parse_review_page(restaurant: Restaurant, page: BeautifulSoup) -> Review:
                   visit_date=date,
                   score=score,
                   response=response)
-
 
 
 def remove_older(reviews: typing.List[Review], since: datetime.date
@@ -282,19 +375,16 @@ if __name__ == "__main__":
     restaurants_urls = (parse_div(restaurant)
                         for restaurant in restaurants_divs)
 
-    # restaurants = [fetch_restaurant_info(name, restaurant)
-    #                for name, restaurant in restaurants_urls]
+    restaurants = [(fetch_restaurant_info(name, url), url)
+                   for name, url in restaurants_urls]
 
-    two_years = datetime.date.today() - datetime.timedelta(days=365*2)
-    print(f"Retrieving reviews since {two_years}")
-    restaurant = None
-    xalet = "/Restaurant_Review-g187500-d995334-Reviews-Xalet_Suis-Lleida_Province_of_Lleida_Catalonia.html"
-    tiki = "/Restaurant_Review-g187437-d1163551-Reviews-TikiTano_Beach_Restaurant_Lounge-Estepona_Costa_del_Sol_Province_of_Malaga_Andalu.html"
-    reviews = fetch_restaurant_reviews(restaurant, tiki, since=two_years)
+    two_years = datetime.date.today() - datetime.timedelta(days=365 * 2)
+    for restaurant, url in restaurants:
+        reviews = fetch_restaurant_reviews(restaurant, url, since=two_years)
+        print("Reviews found:")
+        for review in reviews:
+            print(review)
+            print(review.text)
+            print(review.response)
+            print("")
 
-    print("Reviews found:")
-    for review in reviews:
-        print(review)
-        print(review.text)
-        print(review.response)
-        print("")
