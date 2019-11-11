@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
+import csv
 import datetime
 import functools
+import multiprocessing
 import typing
 import requests_cache
 from bs4 import Tag, BeautifulSoup
@@ -16,6 +18,7 @@ REVIEW_URL = BASE_URL + "/OverlayWidgetAjax?" \
                         "Mode=EXPANDED_HOTEL_REVIEWS&" \
                         "metaReferer=ShowUserReviewsRestaurants"
 RESTAURANT_PAGE_SIZE = 30
+SINCE = datetime.date.today() - datetime.timedelta(days=365)  # One year
 
 GEO_LLEIDA = 187500
 RESTAURANT_DIV_CLASS = "restaurants-list-ListCell__cellContainer--2mpJS"
@@ -100,8 +103,11 @@ class Review:
                 "score", "response"]
 
     def to_csv_row(self) -> typing.List:
-        return [self.restaurant.name, self.user, self.title, self.text,
-                self.visit_date_text, self.score, self.response]
+        text = self.text.replace("\n", "\\n") if self.text else None
+        response = self.response.replace("\n", "\\n") if self.response else None
+
+        return [self.restaurant.name, self.user, self.title, text,
+                self.visit_date_text, self.score, response]
 
 
 def get_restaurants_list(geolocation, offset):
@@ -369,22 +375,68 @@ def fetch_restaurant_reviews(restaurant: Restaurant,
     return all_reviews
 
 
-if __name__ == "__main__":
-    restaurant_offset = sys.argv[1]
-    restaurants_divs = get_restaurants_list(GEO_LLEIDA, restaurant_offset)
-    restaurants_urls = (parse_div(restaurant)
+
+
+def get_restaurant(data):
+    name, url = data
+    return fetch_restaurant_info(name, url), url
+
+
+def get_reviews(data):
+    restaurant, url = data
+    reviews = fetch_restaurant_reviews(restaurant, url, since=SINCE)
+    print("Reviews found:")
+    for review in reviews:
+        print(review)
+        print(review.text)
+        print(review.response)
+        print("")
+    return reviews
+
+
+def main():
+    number_of_restaurants = int(sys.argv[1])
+
+    restaurants_divs = list()
+    restaurant_offset = 0
+    while len(restaurants_divs) < number_of_restaurants:
+        restaurants_divs.extend(get_restaurants_list(GEO_LLEIDA,
+                                                     restaurant_offset))
+        restaurant_offset += RESTAURANT_PAGE_SIZE
+
+    restaurants_divs = restaurants_divs[:number_of_restaurants]
+
+    restaurants_data = (parse_div(restaurant)
                         for restaurant in restaurants_divs)
 
-    restaurants = [(fetch_restaurant_info(name, url), url)
-                   for name, url in restaurants_urls]
+    with multiprocessing.Pool(10) as pool:
+        restaurants = pool.map(get_restaurant, restaurants_data)
+        pool.terminate()
+        pool.join()
 
-    two_years = datetime.date.today() - datetime.timedelta(days=365 * 2)
-    for restaurant, url in restaurants:
-        reviews = fetch_restaurant_reviews(restaurant, url, since=two_years)
-        print("Reviews found:")
+    with open("restaurants_lleida.csv", "w") as f:
+        writer = csv.writer(f, delimiter=";")
+        writer.writerow(Restaurant.get_csv_headers())
+        for restaurant, _ in restaurants:
+            writer.writerow(restaurant.to_csv_row())
+
+    with multiprocessing.Pool(20) as pool:
+        reviews = pool.map(get_reviews, restaurants)
+        pool.terminate()
+        pool.join()
+
+    # Flat the reviews list
+    reviews = [item for sublist in reviews for item in sublist]
+
+    with open("reviews.csv", "w") as f:
+        writer = csv.writer(f, delimiter=";")
+        writer.writerow(Review.get_csv_headers())
         for review in reviews:
-            print(review)
-            print(review.text)
-            print(review.response)
-            print("")
+            writer.writerow(review.to_csv_row())
 
+    print(f"Fetched {len(restaurants)} restaurants")
+    print(f"Fetched {len(reviews)} reviews")
+
+
+if __name__ == "__main__":
+    main()
