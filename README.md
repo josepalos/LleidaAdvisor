@@ -13,6 +13,13 @@ the information of the restaurants.
 - **reviews_lleida.csv** This file is the generated dataset that contains the
 information relative to the reviews of those restaurants.
 
+# Usage
+```
+python src/scrapper.py <number> <days>
+```
+where number specifies the number of restaurants and days the maximum age
+in days that a review can be.
+
 # Authors
 Josep Alòs Pascual (@josepalos)
 

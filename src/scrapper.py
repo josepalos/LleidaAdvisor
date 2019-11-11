@@ -18,7 +18,6 @@ REVIEW_URL = BASE_URL + "/OverlayWidgetAjax?" \
                         "Mode=EXPANDED_HOTEL_REVIEWS&" \
                         "metaReferer=ShowUserReviewsRestaurants"
 RESTAURANT_PAGE_SIZE = 30
-SINCE = datetime.date.today() - datetime.timedelta(days=365)  # One year
 
 GEO_LLEIDA = 187500
 RESTAURANT_DIV_CLASS = "restaurants-list-ListCell__cellContainer--2mpJS"
@@ -382,9 +381,9 @@ def get_restaurant(data):
     return fetch_restaurant_info(name, url), url
 
 
-def get_reviews(data):
+def get_reviews(data, since):
     restaurant, url = data
-    reviews = fetch_restaurant_reviews(restaurant, url, since=SINCE)
+    reviews = fetch_restaurant_reviews(restaurant, url, since=since)
     print("Reviews found:")
     for review in reviews:
         print(review)
@@ -396,6 +395,9 @@ def get_reviews(data):
 
 def main():
     number_of_restaurants = int(sys.argv[1])
+    days_before = int(sys.argv[2])
+
+    since = datetime.date.today() - datetime.timedelta(days=days_before)
 
     restaurants_divs = list()
     restaurant_offset = 0
@@ -421,7 +423,8 @@ def main():
             writer.writerow(restaurant.to_csv_row())
 
     with multiprocessing.Pool(20) as pool:
-        reviews = pool.map(get_reviews, restaurants)
+        f = functools.partial(get_reviews, since=since)
+        reviews = pool.map(f, restaurants)
         pool.terminate()
         pool.join()
 
