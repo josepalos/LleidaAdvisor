@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 import typing
+
+from bs4 import Tag
+
 import utils
 import sys
 
@@ -13,6 +16,8 @@ RESTAURANT_PAGE_SIZE = 30
 GEO_LLEIDA = 187500
 RESTAURANT_DIV_CLASS = "restaurants-list-ListCell__cellContainer--2mpJS"
 RESTAURANT_NAME_CLASS = "restaurants-list-ListCell__restaurantName--2aSdo"
+RESTAURANT_DETAILS_NAME_CLASS = "restaurants-detail-overview-cards-DetailsSectionOverviewCard__categoryTitle--2RJP_"
+RESTAURANT_DETAILS_CONTENT_CLASS = "restaurants-detail-overview-cards-DetailsSectionOverviewCard__tagText--1OH6h"
 
 
 class Restaurant:
@@ -153,6 +158,16 @@ def fetch_restaurant_info(name: str, restaurant_url: str) -> Restaurant:
     return None
 
 
+def parse_restaurant_details(categories_element: Tag) -> dict:
+    categories = dict()
+
+    categories_divs = categories_element.children
+    for category in categories_divs:
+        name = category.find(class_=RESTAURANT_DETAILS_NAME_CLASS).text
+        content = category.find(class_=RESTAURANT_DETAILS_CONTENT_CLASS).text
+        categories[name] = content
+
+    return categories
 
 
 if __name__ == "__main__":
