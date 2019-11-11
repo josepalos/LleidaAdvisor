@@ -121,17 +121,18 @@ def fetch_restaurant_info(name: str, restaurant_url: str) -> Restaurant:
     if not restaurant_details_top and restaurant_details_bottom:
 
         cols = utils.get_text_all_elems(restaurant_details_bottom, "div", "class", "ui_column")
-        list_cols = []
+        # list_cols = []
+        dict = {}
         cuisine_details = ""
 
         for col in cols:
-            list_cols.append(parse_restaurant_details(col, "BOTTOM"))
+            dict.update(parse_restaurant_details(col, "BOTTOM"))
 
-        col1 = list_cols[0]
-        col2 = list_cols[1]
-        col3 = list_cols[2]
+        #col1 = list_cols[0]
+        #col2 = list_cols[1]
+        #col3 = list_cols[2]
 
-        dict = {**col1, **col2, **col3}
+        #dict = {**col1, **col2, **col3}
 
 
         prices = dict.get("PRICE RANGE", None)
@@ -163,17 +164,17 @@ def fetch_restaurant_info(name: str, restaurant_url: str) -> Restaurant:
         excellency_certificate = True
 
     print(
-        name,
-        direction,
-        phone,
-        score,
-        score_food,
-        score_service,
-        score_price,
-        prices,
-        score_ambient,
-        cuisine_details,
-        excellency_certificate
+        "- Name:" , name,
+        "- Direction:" , direction,
+        "- Phone:" , phone,
+        "- Score:", score,
+        "- Score ambient:" , score_food,
+        "- Score service:" , score_service,
+        "- Score price:" , score_price,
+        "- Prices:" , prices,
+        "- Score ambient:" ,score_ambient,
+        "- Cuisine details:" , cuisine_details,
+        "- Excelency:" ,excellency_certificate
     )
 
     return Restaurant(
