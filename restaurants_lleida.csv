@@ -1,0 +1,81 @@
+name;direction;phone;score;score_food;score_service;score_price;score_ambient;prices;cuisine_details;excellency_certificate
+1. Xalet Suis;Avenida Alcalde Rovira Roure, 9, 25006, Lleida Spain;+34 973 23 55 67;4.5;4.5;4.5;4.0;4.5;;Mediterranean, European, Spanish, International, Vegetarian Friendly, Vegan Options, Gluten Free Options;True
+2. Ferreruela, Cuina de la Terra;C/ de Bobala, 8, 25004, Lleida Spain;+34 973 22 11 59;4.5;4.5;4.5;4.0;4.5;€40 - €50;Mediterranean, Spanish, Catalan, European, Vegetarian Friendly, Vegan Options, Gluten Free Options;True
+3. Pinot Gastrotheque;Sant Marti 72, 25004, Lleida Spain;+34 673 43 27 41;4.5;4.5;4.5;4.0;;;Mediterranean, Deli, European, Contemporary, Vegetarian Friendly, Vegan Options, Gluten Free Options;True
+4. Kimo;Carrer de San Marti 61, 25004, Lleida Spain;+34 973 23 25 33;4.5;4.5;4.0;4.0;4.0;;Mediterranean, European, Spanish, Vegetarian Friendly, Vegan Options;True
+5. l'alzumar restaurant;Sant Marti, 59 baixos, 25004, Lleida Spain;+34 973 24 74 13;4.5;4.0;4.5;4.0;4.0;€25 - €40;Mediterranean, European, Spanish, Catalan, Vegetarian Friendly, Gluten Free Options;True
+6. Can Miquel;Templers 9, 25002, Lleida Spain;+34 973 27 10 55;4.5;4.5;4.5;4.0;4.0;;Mediterranean, Barbecue, Spanish, Steakhouse, Catalan, Vegetarian Friendly, Vegan Options, Gluten Free Options;True
+7. Zeke;Avinguda Prat de la Riba, 42, 25008, Lleida Spain;+34 973 22 55 51;4.0;4.5;4.0;3.5;3.5;;Mediterranean, European, Spanish, Vegetarian Friendly;True
+8. Aggio;Templers, 3, 25002, Lleida Spain;+34 973 26 61 55;4.5;4.5;4.5;4.0;4.0;;Mediterranean, European, Spanish, International, Vegetarian Friendly, Vegan Options, Gluten Free Options;True
+9. El Celler de Lleida 3.0;C/ Academia 10, 25002, Lleida Spain;+34 973 28 91 32;4.5;4.0;4.0;4.0;4.0;€12 - €40;Mediterranean, Cafe, European, Fusion, Healthy, Wine Bar, Vegetarian Friendly, Gluten Free Options;True
+10. Bokoto;Magi Morera, 57, 25006, Lleida Spain;+34 973 24 77 53;4.0;4.5;4.5;3.5;4.5;;Japanese, Sushi, Asian, Vegetarian Friendly, Vegan Options, Gluten Free Options;True
+11. Roma Lleida;2 Carrer Bisbe Messeguer, 25003, Lleida Spain;+34 973 26 12 44;4.0;4.0;4.0;4.5;4.0;;Bar, Mediterranean, European, Spanish, Vegetarian Friendly, Vegan Options;True
+12. Pizzeria La Bufala;Carrer Agustins, 1, 25001, Lleida Spain;+34 973 20 27 49;4.0;4.0;4.0;4.0;;€8 - €15;Pizza, Mediterranean, Italian, Vegetarian Friendly, Vegan Options, Gluten Free Options;True
+13. Macao Lleida;Calle Camp De Mart 27, 25006, Lleida Spain;+34 973 04 63 08;4.0;4.5;4.0;3.5;;;Japanese, Mediterranean, Sushi, Asian, Vegetarian Friendly, Vegan Options, Gluten Free Options;True
+14. La cova d'Vidre;Carrer Alcalde Costa 7, 25002, Lleida Spain;+34 973 28 29 15;4.5;4.5;4.5;4.5;;€10 - €25;Mediterranean, Spanish, Barbecue, Vegetarian Friendly, Gluten Free Options;True
+15. La Pifia;Street Hospitalers de Sant Joan 2, 25005, Lleida Spain;+34 873 49 03 91;4.5;4.5;4.5;4.5;;€6 - €30;American, Bar, Vegan Options, Vegetarian Friendly, Gluten Free Options;True
+16. Petit Catala;C/ Alfred Perenya, 7 Alfred Perenya, 7, 25008, Lleida Spain;+34 609 04 34 17;4.0;4.5;4.0;4.5;4.5;€25 - €25;Mediterranean, Spanish, European, Vegetarian Friendly, Gluten Free Options;True
+17. La Capital;Av. Estudi General 1, Local 5 Corner with Jaume II, 25001, Lleida Spain;+34 873 49 11 52;4.0;4.0;4.0;4.0;;€5 - €10;American, Fast Food, Mediterranean, European, Spanish, Vegetarian Friendly, Vegan Options, Gluten Free Options;True
+18. Click Menu;40, Carrer Academia, 25002, Lleida Spain;+34 973 28 20 02;4.0;4.0;4.0;4.5;4.0;;Mediterranean, European, Spanish, ;True
+19. Teresa Carles Cuina Vegetariana;Ricard Vinyes 5 Plaza, 25006, Lleida Spain;+34 973 27 27 95;4.0;4.0;4.0;3.5;;€10 - €25;Mediterranean, European, Spanish, Vegetarian Friendly, Vegan Options, Gluten Free Options;True
+20. La Huerta;Avenida Tortosa, 7, 25005, Lleida Spain;+34 973 24 50 40;4.0;4.0;4.0;3.5;3.5;€22 - €30;Mediterranean, European, Spanish, Vegetarian Friendly, Vegan Options, Gluten Free Options;True
+21. Alveo;Corregidor Escofet, 20, 25005, Lleida Spain;+34 973 84 59 84;4.5;4.5;4.5;4.5;;€10 - €22;Italian, Mediterranean, Spanish, Vegetarian Friendly;True
+22. Carballeira;Antigua N-II Km. 457, 5 Restaurante en las afueras del casco urbano, en plena huerta, rodeado de campos y naturaleza., 25194, Lleida Spain;+34 973 27 27 28;4.5;4.5;4.0;3.5;3.5;;Spanish, Mediterranean, Gluten Free Options;True
+23. La Casa del Vermut;Corregidor Escofet, 14, 25005, Lleida Spain;+34 973 22 02 30;4.0;4.0;4.0;4.0;4.5;;Mediterranean, Spanish, European, Vegetarian Friendly;True
+24. Restaurant Les Comes;Cami de Les Comes, 2 - bajo Calle Cami de Les Comes No 2, 25123 Torrefarrera, Lleida Spain;+34 973 75 07 39;4.5;4.5;4.5;4.0;;€11 - €21;Vegetarian Friendly;True
+25. La Piemontesa Lleida;Avenida Balmes, 7, 25006, Lleida Spain;+34 973 30 22 94;4.0;4.0;4.0;3.5;3.5;;Italian, Pizza, Mediterranean, European, Vegetarian Friendly, Vegan Options, Gluten Free Options;True
+26. La Dolceta Restaurant;Cami de Montcada 42, 25196, Lleida Spain;+34 973 23 13 64;4.0;4.5;4.0;3.0;3.5;€20 - €60;Mediterranean, Barbecue, Spanish, Catalan, ;True
+27. Creperia Flash;Avinguda Alcalde Porqueres 5, 25008, Lleida Spain;+34 973 22 18 40;4.0;4.0;4.0;4.0;3.5;;Mediterranean, European, Spanish, International, Vegetarian Friendly, Vegan Options;True
+28. Nou Casa Jose;c/ Torres de Sanui 34, 25006, Lleida Spain;+34 973 23 70 38;4.0;4.0;4.0;4.0;3.5;;Seafood, Spanish, Mediterranean, ;True
+29. El Cau de Sant Llorenc;Placa Sant Josep, 4, 25002, Lleida Spain;+34 973 28 91 63;4.0;4.5;4.5;4.0;4.5;;Mediterranean, European, Spanish, Gluten Free Options;True
+30. Braseria Restaurant Llobregat;C/ Riu Llobregat, 7 Barrio de Cap pont, 25001, Lleida Spain;+34 973 20 18 97;4.5;4.5;4.5;4.0;;;Mediterranean, Spanish, Steakhouse, Vegetarian Friendly, Vegan Options, Gluten Free Options;True
+31. Bar Tofol;Carrer Pallars 18, 25004, Lleida Spain;+34 973 23 10 55;4.0;4.5;4.5;3.5;4.5;;Spanish, Mediterranean, European, ;True
+32. Aimia;C/Doctor Combelles 67, 25003, Lleida Spain;+34 973 26 16 18;4.0;4.0;4.0;3.5;3.5;;Mediterranean, European, Spanish, Vegetarian Friendly, Vegan Options, Gluten Free Options;True
+33. Brasa d'Or Restaurant;Antoni Guix Ribelles, 25, 25191, Lleida Spain;+34 973 20 30 57;4.0;4.5;4.5;4.0;4.5;€5 - €50;Contemporary, Mediterranean, Spanish, ;True
+34. Restaurant L'Hortet;Carrer Torres de Sanui, 12 Torres de Sanui 12, 25006, Lleida Spain;+34 973 24 75 48;4.0;4.5;4.5;4.0;4.0;;Mediterranean, European, Spanish, Vegetarian Friendly, Vegan Options, Gluten Free Options;False
+35. BOnum No Rules;Calle Sant Marti, 55, 25004, Lleida Spain;+34 973 27 95 86;4.0;4.0;4.0;4.0;3.5;€15 - €40;Mediterranean, Fusion, European, Japanese, Vegetarian Friendly;True
+36. Can Ramon;Calle Baixada de la Trinitat, 5, 25007, Lleida Spain;+34 973 24 00 97;4.0;4.5;4.5;4.5;3.5;€10 - €20;Mediterranean, Spanish, Healthy, Vegetarian Friendly, Vegan Options;True
+37. Restaurant Urgell;C/ Antoni Sole 2, 25001, Lleida Spain;+34 656 87 61 78;4.0;4.0;4.0;4.0;;€10 - €32;Mediterranean, Spanish, Vegetarian Friendly, Gluten Free Options, Vegan Options;True
+38. El Celleret del Segre SL.;10, 25007, Lleida Spain;+34 973 23 19 42;4.0;4.5;4.0;4.0;3.5;;Mediterranean, European, Spanish, ;True
+39. Lombarda Restaurant;Riu Ter 10, 25001, Lleida Spain;+34 684 23 93 17;4.5;;;;;€12 - €25;Mediterranean, Spanish, ;False
+40. L'impasto;Carrer del Cami de Corbins, 35, 25005, Lleida Spain;+34 973 23 54 31;4.5;4.5;4.5;4.5;;;Italian, Pizza, Mediterranean, Spanish, Vegetarian Friendly, Vegan Options;False
+41. Restaurant Astoria;Carrer Bonaire , 27, 25004, Lleida Spain;+34 687 95 20 59;4.0;4.0;4.0;4.0;3.5;€12 - €30;Mediterranean, Spanish, European, Vegetarian Friendly;True
+42. La Clasca;Carrer Jaume II, 17, 25001, Lleida Spain;+34 973 21 35 96;4.5;4.5;4.5;4.0;4.5;;Mediterranean, Spanish, ;True
+43. La Tagliatella Rovira Roure, Lleida;C/ Rovira Roure Sn, 25199, Lleida Spain;+34 973 72 50 60;3.5;3.5;4.0;3.0;4.0;€20 - €30;Italian, Pizza, Mediterranean, European, Vegetarian Friendly, Vegan Options, Gluten Free Options;False
+44. Tandoori Mahal restaurant;AV Estudi General, 10, 25001, Lleida Spain;+34 873 49 92 15;4.5;4.5;4.0;4.5;;;Indian, Vegetarian Friendly, Vegan Options, Gluten Free Options;True
+45. Churreria Chocolateria J. Moreno;Calle Pallars 11, 25004, Lleida Spain;+34 973 23 98 59;4.5;4.5;4.5;4.5;;;Cafe, ;True
+46. El Celler del Roser;Cavallers, 24, 25002, Lleida Spain;+34 973 23 90 70;4.0;3.5;4.0;3.5;3.5;;Mediterranean, European, Spanish, Vegetarian Friendly;True
+47. Restaurant Cal Pep;Calle Sant Marti 70, 25004, Lleida Spain;+34 973 22 24 63;4.0;4.0;4.0;4.0;4.0;;Spanish, Mediterranean, ;True
+48. Platz;C. Humbert Torres, 7, 25008, Lleida Spain;+34 973 93 00 83;4.0;4.0;4.0;4.0;;;Mediterranean, Spanish, ;False
+49. Restaurant L'Arosa;Avinguda del Pla d'Urgell, 41, 25001, Lleida Spain;+34 973 20 46 74;4.5;4.5;4.5;4.5;;;Mediterranean, Spanish, Vegetarian Friendly;False
+50. Irodori sushi;Alcalde Porqueres 11, 25008, Lleida Spain;+34 973 10 69 41;4.5;4.5;4.5;4.5;;;Japanese, Sushi, Asian, Vegetarian Friendly;False
+51. Els Trulls;C/ Palma, 21, 25002, Lleida Spain;+34 973 26 80 27;4.0;4.0;4.0;3.5;4.0;;Mediterranean, Barbecue, ;True
+52. Il sale in zucca;Torres de Sanui 23, 25006, Lleida Spain;+34 973 83 02 27;5.0;5.0;5.0;5.0;;€5 - €15;Italian, Pizza, Healthy, Bar, Vegetarian Friendly, Vegan Options, Gluten Free Options;False
+53. Creperie Bretonne Annaick de Lleida;Placa Cerventes, 25002, Lleida Spain;+34 973 98 47 15;4.0;4.5;4.5;4.0;4.5;;French, European, Vegetarian Friendly, Vegan Options, Gluten Free Options;True
+54. Restaurant Cal Nenet;Partida de Butsenit 38, 25194, Lleida Spain;+34 973 26 00 16;4.0;4.0;4.0;3.5;3.5;;Mediterranean, Spanish, Barbecue, Healthy, ;True
+55. Cal Tupinet;Placa Llac, Ag. Montella al Costat de L'església Del Poble, 25725, Lleida Spain;+34 973 51 52 15;4.5;4.0;4.0;4.0;;;Mediterranean, Spanish, Vegetarian Friendly, Vegan Options, Gluten Free Options;True
+56. La Pinta;Baro De Maials, 89, 25005, Lleida Spain;+34 973 83 38 67;4.0;4.0;3.5;4.5;;;American, Fast Food, Vegetarian Friendly;True
+57. La Gramatica Del Vermut;Placa Dels Gramatics, 8, 25002, Lleida Spain;+34 973 30 29 25;4.0;4.5;4.5;3.5;;;Mediterranean, Spanish, ;True
+58. Restaurant El Galeo;Anselm Clave, 17, 25007, Lleida Spain;+34 973 22 32 22;4.0;4.0;4.0;4.0;3.5;€10 - €15;Mediterranean, Spanish, ;True
+59. Restaurant Palermo;Avenida Exercit, 48, 25194, Lleida Spain;+34 973 26 39 61;4.0;3.5;4.0;3.5;;€25 - €50;Mediterranean, Spanish, Vegetarian Friendly, Gluten Free Options;True
+60. SUMMUM Lleida;Plaza Santa Maria Magadalena,2, 25008, Lleida Spain;+34 973 10 32 75;4.5;4.0;3.5;4.5;;;Spanish, Vegetarian Friendly, Vegan Options;False
+61. Des-Tapa'T Casual Food;Plaza Paeria 13 Corner with Blondel 6 street, 25007, Lleida Spain;+34 973 98 68 67;4.0;4.0;4.0;3.5;;€9 - €15;Mexican, American, Mediterranean, Vegetarian Friendly, Vegan Options;True
+62. Cal Mosset;St Cami D'Alpicat, 25123 Torrefarrera, Lleida Spain;+34 973 75 01 48;4.0;4.0;4.0;4.0;;;Mediterranean, Spanish, Grill, Vegetarian Friendly, Gluten Free Options;True
+63. Iruna Lleida;Pl. Sant Llorenc, 3, 25002, Lleida Spain;+34 973 27 47 55;4.0;4.0;4.0;3.5;3.0;;Mediterranean, Spanish, ;False
+64. Xicoira, Restaurant Vegetaria;Bonaire 18, 25004, Lleida Spain;+34 973 04 94 78;4.0;4.5;4.0;4.0;;€10 - €20;Healthy, Mediterranean, Spanish, Vegetarian Friendly, Vegan Options, Gluten Free Options;True
+65. Sukulen;C/ Barcelona Poligon Industrial Torre-serona, 25131, Lleida Spain;+34 973 10 09 63;4.5;4.0;4.0;4.5;;€15 - €22;Mediterranean, Spanish, Vegetarian Friendly;False
+66. La Sandvitxeria de Lleida;Calle Alcalde Pujol, 13, 25006, Lleida Spain;+34 973 26 37 08;4.0;4.0;4.0;4.0;4.0;;Mediterranean, Spanish, ;True
+67. Pardinyes History;Crer Jeroni Pujades 41, 25005, Lleida Spain;+34 973 22 08 39;4.5;4.5;4.0;4.0;;;Mediterranean, Spanish, Vegetarian Friendly;False
+68. Braseria Isidro;Avinguda Alcalde Areny, 4, 25002, Lleida Spain;+34 973 28 18 79;4.0;4.0;4.0;3.5;3.5;;Spanish, Steakhouse, Barbecue, Healthy, ;True
+69. Rita Coko;Sant Marti, 51, 25004, Lleida Spain;+34 973 04 93 81;4.0;4.0;4.0;4.0;4.0;;Mediterranean, Spanish, European, Contemporary, ;False
+70. Fonda del Nastasi;Avda. Alcalde Rovira Roure, 214, 25198, Lleida Spain;+34 973 24 92 22;4.0;4.0;4.0;3.5;4.0;€25 - €60;Spanish, ;False
+71. Cantamanyanes;C/Jaume II 55, 25001, Lleida Spain;+34 973 98 62 34;4.0;4.0;3.5;3.5;;€8 - €14;Mediterranean, Spanish, Catalan, Vegetarian Friendly;False
+72. La Masia;Democracia, 16, 25007, Lleida Spain;+34 973 23 42 24;3.5;3.5;4.0;3.5;4.0;;Mediterranean, Spanish, Vegetarian Friendly;False
+73. El Raco;Carrer del Raval, 28, 25175, Lleida Spain;+34 973 12 62 43;5.0;5.0;4.5;4.5;;;Spanish, Mediterranean, Vegan Options;False
+74. Frankfurt Las Vegas;Luis Companys, 21, 25003, Lleida Spain;+34 973 26 08 78;4.0;4.0;3.5;4.0;2.5;;Bar, Fast Food, Spanish, Pub, ;True
+75. Reno;Prat de la Riba, 42, 25008, Lleida Spain;+34 973 24 68 18;4.0;4.0;4.0;3.5;4.0;;Spanish, Mediterranean, ;False
+76. Beat Cafe i Soul;Doctora Castells, 36, 25001, Lleida Spain;+34 873 48 00 11;4.0;4.5;4.5;4.0;5.0;;;False
+77. Caravista;Avenida Balmes 38 bajos, 25006, Lleida Spain;+34 973 85 60 09;4.0;4.5;4.5;4.0;;€30 - €60;Seafood, Mediterranean, Spanish, ;False
+78. Confiteria La Portena;Avenida Prat de la Riba, 78, 25004, Lleida Spain;+34 873 49 86 63;5.0;;;;;€2 - €5;Cafe, Argentinean, Mediterranean, Spanish, ;False
+79. Il Pastificcio Lleida;Pasaje Pompeu, 5, 25006, Lleida Spain;+34 973 22 02 95;3.5;4.0;4.0;3.5;4.0;;Italian, Mediterranean, European, Vegetarian Friendly;False
+80. Gran Astoria;Corregidor Escofet 80, 25005, Lleida Spain;+34 685 80 65 24;4.0;4.0;4.0;4.0;;;Mediterranean, Spanish, ;False

@@ -8,6 +8,7 @@ import requests_cache
 from bs4 import Tag, BeautifulSoup
 import utils
 import sys
+import matplotlib.pyplot as plt
 
 BASE_URL = "https://www.tripadvisor.com"
 RESTAURANT_PAGINATION_URL = BASE_URL + "/RestaurantSearch?" \
@@ -415,6 +416,10 @@ def main():
         restaurants = pool.map(get_restaurant, restaurants_data)
         pool.terminate()
         pool.join()
+
+    scores = [restaurant.score for restaurant,_ in restaurants]
+    plt.hist(scores)
+    plt.show()
 
     with open("restaurants_lleida.csv", "w") as f:
         writer = csv.writer(f, delimiter=";")
