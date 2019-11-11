@@ -92,10 +92,9 @@ es mostren en la taula~\ref{table:dataset1_data}.
     \begin{tabular}{|p{.2\textwidth}|p{.1\textwidth}|p{.6\textwidth}|}
 		\hline
         Nom       & Tipus  & Descripció \\\hline\hline
-		Id		  & int	   & Identificador del restaurant \\\hline
-        Nom       & String & Nom del restaurant \\\hline
-        Adreça    & String & Direcció del restaurant \\\hline
-        Telèfon   & String & Telèfon del restaurant \\\hline
+        Nom       & string & Nom del restaurant. \\\hline
+        Adreça    & string & Direcció del restaurant. \\\hline
+        Telèfon   & string & Telèfon del restaurant. \\\hline
         Puntuació & float  & La puntuació que té el restaurant. Aquesta
                              puntuació és la mitjana de les puntuacions de
                              menjar, servei, preu, i atmosfera. El seu valor
@@ -104,9 +103,9 @@ es mostren en la taula~\ref{table:dataset1_data}.
         Puntuació servei & float & \\\hline
         Puntuació preu & float & \\\hline
         Puntuació atmòsfera & float & \\\hline
-        Horaris setmanals & str & Horaris que obra el restaurant. \\\hline % TODO review
+		Rang de preu & string & El rang de preus que es troben els plats.\\\hline
         Detalls cuina & string & Detalls de la cuina d'aquest restaurant (estil,
-                                 plats\dots) \\\hline
+                                 plats\dots). \\\hline
         Certificat excelència & boolean & Si el restaurant té un certificat
                                           d'excelència. \\\hline
     \end{tabular}
@@ -123,15 +122,16 @@ taula~\ref{table:dataset1_data}.
 	\centering
     \begin{tabular}{|p{.2\textwidth}|p{.1\textwidth}|p{.7\textwidth}|}
 		\hline
-        Nom        & Tipus  & Descripció \\\hline\hline
-        Restaurant & int    & Identificador del restaurant\\\hline
-        Usuari     & string & L'usuari que ha escrit el comentari \\\hline
-        Titol      & string & El titol del comentari \\\hline
-        Text       & string & El contingut del comentari \\\hline
-        Data       & date   & La data en que s'ha fet el comentari \\\hline
-        Puntuació  & int    & La puntuació que ha donat aquest usuari \\\hline
-        Resposta   & string & Resposta del restaurant (pot existir o no)
-							  \\\hline
+        Nom            & Tipus  & Descripció \\\hline\hline
+        Restaurant     & string & Identificador del restaurant\\\hline
+        Usuari         & string & L'usuari que ha escrit el comentari \\\hline
+        Titol          & string & El titol del comentari \\\hline
+        Text           & string & El contingut del comentari \\\hline
+        Data de visita & date   & La data de la visita (mes i any) \\\hline
+        Puntuació      & int    & La puntuació que ha donat aquest usuari
+								  \\\hline
+        Resposta       & string & Resposta del restaurant (pot existir o no)
+								  \\\hline
     \end{tabular}
     \caption{Dades dels comentaris}
     \label{table:dataset2_data}
@@ -143,8 +143,8 @@ es treballava, però el codi proporciona un paràmetre per generar datasets més
 amb altres dates.
 
 Referent als restaurants, TripAdvisor proporciona dades en una llista ordenada
-per rellevància. Per tant, s'ha limitat als N primers restaurants d'aquesta % TODO
-llista, pel mateix motiu esmentat anteriorment. Aquest valor també es
+per rellevància. Per tant, s'ha limitat als 150 primers restaurants (5 pàgines)
+d'aquesta llista, pel mateix motiu esmentat anteriorment. Aquest valor també es
 parametritzable.
 \linebreak
 
