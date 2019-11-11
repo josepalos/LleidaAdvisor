@@ -103,6 +103,7 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# PyCharm
 .idea/
 cache.sqlite
+output_report/
+.idea/
